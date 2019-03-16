@@ -2,6 +2,7 @@ package by.koltun.configuration;
 
 import by.koltun.DataSourceManager;
 import by.koltun.service.DataSourceService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,12 +11,13 @@ public class DataSourceConfiguration {
 
     private final DataSourceService dataSourceService;
 
+    @Autowired
     public DataSourceConfiguration(final DataSourceService dataSourceService) {
         this.dataSourceService = dataSourceService;
     }
 
     @Bean
     public DataSourceManager dataSource() {
-        return new DataSourceManager(dataSourceService.getById("default").orElse(null));
+        return new DataSourceManager(dataSourceService.getDefaultDataSource());
     }
 }

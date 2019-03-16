@@ -1,10 +1,16 @@
 package by.koltun.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
+import java.util.UUID;
 
 public class DataSourceTO implements Serializable {
 
     private static final long serialVersionUID = 7658902544317678211L;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String id = UUID.randomUUID().toString();
 
     private String driverClassName;
 
@@ -22,6 +28,10 @@ public class DataSourceTO implements Serializable {
         this.url = url;
         this.username = username;
         this.password = password;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getDriverClassName() {

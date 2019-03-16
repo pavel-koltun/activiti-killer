@@ -46,11 +46,6 @@
         </dependency>
         <dependency>
             <groupId>org.activiti</groupId>
-            <artifactId>activiti-spring-boot-starter-jpa</artifactId>
-            <version>5.22.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.activiti</groupId>
             <artifactId>activiti-rest</artifactId>
             <version>5.22.0</version>
             <exclusions>
@@ -65,14 +60,14 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-common-rest</artifactId>
-            <version>5.22.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc6</artifactId>
             <version>11.2.0</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -5,6 +5,7 @@ import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
 import org.activiti.rest.service.api.runtime.task.TaskResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,7 +27,7 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<TaskResponse>> tasks(@RequestParam(value="orderBy", required = false) final String orderBy,
                                                     @RequestParam(value="order", required = false) final String order) {
         TaskQuery taskQuery = taskService.createTaskQuery();
@@ -39,7 +38,7 @@ public class TaskController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TaskResponse> task(@PathVariable("id") final String id) {
         final Task task;
         if ((task = taskService.createTaskQuery().taskId(id).singleResult()) == null) {
@@ -50,21 +49,6 @@ public class TaskController {
     }
 
     private void processOrderClause(final TaskQuery taskQuery, final String orderBy, final String order) {
-        final String orderByField = Optional.ofNullable(orderBy).orElse("createTime");
-        switch (orderByField) {
-            case "createTime":
-                taskQuery.orderByTaskCreateTime();
-                break;
-        }
-
-        final boolean ascending = Optional.ofNullable(order).filter(Arrays.asList("asc", "desc")::contains)
-                .map("asc"::equals).orElse(false);
-        System.out.println("Order by " + orderBy + " ascending: " + ascending);
-
-        if (ascending) {
-            taskQuery.asc();
-        } else {
-            taskQuery.desc();
-        }
+        // todo implement sorting
     }
 }

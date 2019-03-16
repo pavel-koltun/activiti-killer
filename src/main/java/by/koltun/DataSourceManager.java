@@ -1,5 +1,6 @@
 package by.koltun;
 
+import by.koltun.exception.DataSourceInstantiationException;
 import by.koltun.model.DataSourceTO;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 
@@ -14,23 +15,25 @@ public class DataSourceManager implements DataSource {
 
     private DataSource dataSource;
 
-    public DataSourceManager() {}
-
-    public DataSourceManager(final DataSourceTO defaultDataSourceTO) {
-        this.dataSource = createDataSource(defaultDataSourceTO);
+    public DataSourceManager(final DataSourceTO defaultDataSource) throws DataSourceInstantiationException {
+        this.dataSource = createDataSource(defaultDataSource);
     }
 
-    private DataSource createDataSource(final DataSourceTO dataSourceTO) {
-        return DataSourceBuilder.create()
-                .driverClassName(dataSourceTO.getDriverClassName())
-                .url(dataSourceTO.getUrl())
-                .username(dataSourceTO.getUsername())
-                .password(dataSourceTO.getPassword())
-                .build();
+    private DataSource createDataSource(final DataSourceTO dataSource) throws DataSourceInstantiationException {
+        try {
+            return DataSourceBuilder.create()
+                    .driverClassName(dataSource.getDriverClassName())
+                    .url(dataSource.getUrl())
+                    .username(dataSource.getUsername())
+                    .password(dataSource.getPassword())
+                    .build();
+        } catch (Exception e) {
+            throw new DataSourceInstantiationException();
+        }
     }
 
-    public void switchDataSource(final DataSourceTO dataSourceTO) {
-        this.dataSource = createDataSource(dataSourceTO);
+    public void setDataSource(final DataSourceTO dataSource) throws DataSourceInstantiationException {
+        this.dataSource = createDataSource(dataSource);
     }
 
     @Override

@@ -14,13 +14,21 @@ import java.util.Optional;
 @Service
 public class DataSourceService {
 
+    private static final String DEFAULT_DS_DRIVER = "org.h2.Driver";
+    private static final String DEFAULT_DS_URL = "jdbc:h2:mem:db;DB_CLOSE_DELAY=-1";
+    private static final String DEFAULT_DS_PASSWORD = "sa";
+    private static final String DEFAULT_DS_USERNAME = "sa";
+
+    private static final DataSourceTO defaultDataSource;
     private static final Map<String, DataSourceTO> dataSources = new HashMap<>();
 
     static {
-        dataSources.put("default", new DataSourceTO("oracle.jdbc.driver.OracleDriver",
-                                                    "jdbc:oracle:thin:@localhost:FOS11G",
-                                                    "username",
-                                                    "password"));
+        defaultDataSource = new DataSourceTO(
+                DEFAULT_DS_DRIVER, DEFAULT_DS_URL, DEFAULT_DS_PASSWORD, DEFAULT_DS_USERNAME);
+    }
+
+    public DataSourceTO getDefaultDataSource() {
+        return defaultDataSource;
     }
 
     public List<DataSourceTO> getAll() {
@@ -31,10 +39,9 @@ public class DataSourceService {
         return Optional.ofNullable(dataSources.get(id));
     }
 
-    public void save(final String id, final DataSourceTO dataSource) {
-        Objects.requireNonNull(id);
-        Objects.requireNonNull(dataSource);
-
-        dataSources.put(id, dataSource);
+    public DataSourceTO save(final DataSourceTO dataSource) {
+        dataSources.put(Objects.requireNonNull(dataSource.getId(), "Data source id is null"),
+                Objects.requireNonNull(dataSource, "Data source is null."));
+        return dataSource;
     }
 }
